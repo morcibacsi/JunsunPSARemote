@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For debug_lvc
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+JunsunPSARemote	KEYWORD1
+JunsunPSAButton	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+SendButtonCode	KEYWORD2
+SendSpeed	KEYWORD2
+SendTripDataCar	KEYWORD2
+SendTripData1	KEYWORD2
+SendTripData2	KEYWORD2
+SendTemperature	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
