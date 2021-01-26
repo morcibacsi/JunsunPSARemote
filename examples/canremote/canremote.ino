@@ -1,16 +1,16 @@
-#include <JunsunPSARemote.h>
+#include <JunsunPSACANRemote.h>
 
 #define RXD2 16
 #define TXD2 17
 
-JunsunPSARemote* remote;
+JunsunPSACANRemote* remote;
 
 void setup()
 {
     Serial.begin(500000);
     Serial2.begin(19200, SERIAL_8N1, RXD2, TXD2);
 
-    remote = new JunsunPSARemote(Serial2);
+    remote = new JunsunPSACANRemote(Serial2);
 }
 
 void loop()

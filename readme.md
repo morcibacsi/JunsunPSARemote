@@ -8,11 +8,13 @@ The CAN box adapter has much more functionality, like switching to the reverse c
 
 ### Why ?
 
-Because it is fun. But other than that if you forgot to order the CAN bus adapter, or you are looking for a DIY project I am here to help.
+Because it is fun. But other than that if you forgot to order the CAN bus adapter, or you are looking for a DIY project I am here to help. You don't need to have a Peugeot/Citroen car for this library, as it is written for the headunit. You can interface any car as long as you implement whatever protocol it uses.  For example you may have a Ford car where you implement the CAN bus parsing, but you use this library telling the headunit that you have a Peugeot.
 
 ### The protocol
 
-The CAN bus adapter uses a 19200 baud serial port with a 8 databits 1 stop bit and no parity to communicate with the head unit. It uses a simple protocol to send commands.
+#### CAN box protocol
+
+When you select CAN Type **127. PSA(Rzc)** from the settings the headunit will use a **19200** baud serial port with a 8 databits 1 stop bit and no parity to communicate with the CAN box. It uses a simple protocol to send commands.
 
 A sample message:
 
@@ -23,25 +25,37 @@ A sample message:
      │                           bytes
      └────────────────────────── header
 
-### Usage
-I attached a simple sketch which can be found in the examples folder. You need to set your CAN type to 127. PSA(Rzc) on the head unit to make it work.
+#### VAN box protocol
 
+VAN bus was used in Peugeot 206(+), 307 (2001-2005), 406,1007, Citroen Xsara, C3, C5... etc cars between 2001-2005.
+When you select CAN Type **108. Peugeot206/207/307** from the settings the headunit will use a **38400** baud serial port with a 8 databits 1 stop bit and no parity to communicate with the "CAN box". It uses a simple protocol to send commands.
+
+    0x2E 0x01 0x02 0x01 0x01 0xDB
+     │    │    │   └───┼───┘  └────── checksum (0xFF - sum of the previous bytes excluding the header, can overflow) 
+     │    │    │       └───────────── data bytes
+     │    │    └───────────────────── length of the payload
+     │    └────────────────────────── function id
+     └─────────────────────────────── header
+
+### Usage
+I attached two simple sketches which can be found in the examples folder. 
+If you use the JunsunPSA**C**ANRemote library then need to set CAN type to **127. PSA(Rzc)** on the head unit to make it work.
 ![schema](https://github.com/morcibacsi/JunsunPSARemote/raw/main/extras/can_setup.jpg)
 
-A basic sketch is like this:
+A basic sketch with JunsunPSA**C**ANRemote is like this:
 
-    #include <JunsunPSARemote.h>
+    #include <JunsunPSACANRemote.h>
     
     #define RXD2 16
     #define TXD2 17
 
-    JunsunPSARemote* remote;
+    JunsunPSACANRemote* remote;
     void setup()
     {
         // we use the Serial2 of the ESP32 to communicate with the head unit
         Serial2.begin(19200, SERIAL_8N1, RXD2, TXD2);
         // we instantiate the library
-        remote = new JunsunPSARemote(Serial2);
+        remote = new JunsunPSACANRemote(Serial2);
     }
 
     void loop()
@@ -55,12 +69,51 @@ A basic sketch is like this:
         remote->SendTripData2(4685, 4.2, 66);
     }
 
-You can watch a short video about it here:
+If you use the JunsunPSA**V**ANRemote library then need to set CAN type to **108. Peugeot206/207/307** on the head unit to make it work.
+![schema](https://github.com/morcibacsi/JunsunPSARemote/raw/main/extras/van_setup.jpg)
 
+A basic sketch with JunsunPSA**V**ANRemote is like this:
+
+    #include <JunsunPSAVANRemote.h>
+    
+    #define RXD2 16
+    #define TXD2 17
+
+    JunsunPSAVANRemote* remote;
+    void setup()
+    {
+        // we use the Serial2 of the ESP32 to communicate with the head unit
+        Serial2.begin(38400, SERIAL_8N1, RXD2, TXD2);
+        // we instantiate the library
+        remote = new JunsunPSAVANRemote(Serial2);
+    }
+
+    void loop()
+    {
+        remote->SendButtonCode(VolumeUp);
+        delay(6000);
+        remote->SendButtonCode(VolumeDown);
+        delay(6000);
+        
+        DoorStatus ds;
+        ds.status.front_left = 1;
+        remote->SendCarInfo(47, 653, 1549, 6, 8, -27, ds);
+        delay(6000);
+
+        ds.status.front_left = 0;
+        remote->SendCarInfo(47, 653, 1549, 6, 8, -27, ds);
+        delay(6000);
+    }
+
+You can watch a short video about it here:
 [![WATCH IT ON YOUTUBE](https://github.com/morcibacsi/JunsunPSARemote/raw/main/extras/youtube_preview.jpg)](https://www.youtube.com/watch?v=MtLH9LZdBNc "Watch it on YouTube")
 
+The Car Info application displaying our values:
+![van_features](https://github.com/morcibacsi/JunsunPSARemote/raw/main/extras/van_features.jpg)
 
 ### Schema
+
+The schema and the example uses an ESP32 devboard, but the library should work with other Arduino compatible boards as well.
 
 ![schema](https://github.com/morcibacsi/JunsunPSARemote/raw/main/extras/schema.jpg)
 

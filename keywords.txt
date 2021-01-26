@@ -5,8 +5,10 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-JunsunPSARemote	KEYWORD1
-JunsunPSAButton	KEYWORD1
+JunsunPSACANRemote	KEYWORD1
+JunsunPSAVANRemote	KEYWORD1
+JunsunPSACANButton	KEYWORD1
+JunsunPSAVANButton	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -17,6 +19,7 @@ SendTripDataCar	KEYWORD2
 SendTripData1	KEYWORD2
 SendTripData2	KEYWORD2
 SendTemperature	KEYWORD2
+SendCarInfo	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

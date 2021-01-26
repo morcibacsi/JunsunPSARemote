@@ -1,17 +1,17 @@
-#include "JunsunPSARemote.h"
+#include "JunsunPSACANRemote.h"
 
-JunsunPSARemote::JunsunPSARemote(Stream& serial)
+JunsunPSACANRemote::JunsunPSACANRemote(Stream& serial)
 {
     serialPort = &serial;
 }
 
-void JunsunPSARemote::SendButtonCode(JunsunPSAButton button)
+void JunsunPSACANRemote::SendButtonCode(JunsunPSAButton button)
 {
     uint8_t data[] = { 0x02, (uint8_t) button };
     SendData(data, JS_ARRAY_SIZE(data));
 }
 
-void JunsunPSARemote::SendSpeed(uint8_t speed)
+void JunsunPSACANRemote::SendSpeed(uint8_t speed)
 {
     uint16_t speedData = speed * 100;
 
@@ -22,7 +22,7 @@ void JunsunPSARemote::SendSpeed(uint8_t speed)
     SendData(data, JS_ARRAY_SIZE(data));
 }
 
-void JunsunPSARemote::SendTripDataCar(uint16_t icon1Data, double icon2Data, uint16_t icon3Data)
+void JunsunPSACANRemote::SendTripDataCar(uint16_t icon1Data, double icon2Data, uint16_t icon3Data)
 {
     // icon1 max = 2000
     // icon3 max = 6000
@@ -49,7 +49,7 @@ void JunsunPSARemote::SendTripDataCar(uint16_t icon1Data, double icon2Data, uint
     SendData(data, JS_ARRAY_SIZE(data));
 }
 
-void JunsunPSARemote::SendTripData1(uint16_t icon1Data, double icon2Data, uint8_t icon3Data)
+void JunsunPSACANRemote::SendTripData1(uint16_t icon1Data, double icon2Data, uint8_t icon3Data)
 {
     uint8_t icon1_part1 = highByte(icon1Data);
     uint8_t icon1_part2 = lowByte(icon1Data);
@@ -71,7 +71,7 @@ void JunsunPSARemote::SendTripData1(uint16_t icon1Data, double icon2Data, uint8_
     SendData(data, JS_ARRAY_SIZE(data));
 }
 
-void JunsunPSARemote::SendTripData2(uint16_t icon1Data, double icon2Data, uint8_t icon3Data)
+void JunsunPSACANRemote::SendTripData2(uint16_t icon1Data, double icon2Data, uint8_t icon3Data)
 {
     uint8_t icon1_part1 = highByte(icon1Data);
     uint8_t icon1_part2 = lowByte(icon1Data);
@@ -92,7 +92,7 @@ void JunsunPSARemote::SendTripData2(uint16_t icon1Data, double icon2Data, uint8_
     SendData(data, JS_ARRAY_SIZE(data));
 }
 
-void JunsunPSARemote::SendTemperature(int8_t temperature)
+void JunsunPSACANRemote::SendTemperature(int8_t temperature)
 {
     // Max temperature which is displayed is 87
     // Min temperature which is displayed is -40
@@ -112,7 +112,7 @@ void JunsunPSARemote::SendTemperature(int8_t temperature)
     SendData(data, JS_ARRAY_SIZE(data));
 }
 
-void JunsunPSARemote::SendData(uint8_t message[], uint8_t messageLength)
+void JunsunPSACANRemote::SendData(uint8_t message[], uint8_t messageLength)
 {
     /* the commands have the following layout
      *      1st byte: 0xFD
